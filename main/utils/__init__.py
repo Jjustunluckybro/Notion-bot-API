@@ -1,2 +1,2 @@
 from . import config
-from MongoAPI import MongoAPI
+from . import logger

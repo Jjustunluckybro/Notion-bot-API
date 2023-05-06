@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class UserModel(BaseModel):
     _id: int
     tg_name: str
