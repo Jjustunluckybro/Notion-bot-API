@@ -7,9 +7,6 @@ class UserModel(BaseModel):
     tg_id: str
     name: str
 
-    # class Config:
-    #     fields = {"id": "_id"}
-
 
 class NotionModel(BaseModel):
     """Single notion data model"""
@@ -17,7 +14,7 @@ class NotionModel(BaseModel):
     user_id: int
     parent_id: int
     creation_time: datetime
-    next_notion_time: datetime
+    next_notion_time: datetime | None
     is_repeatable: bool
     description: str | None
 
