@@ -68,26 +68,29 @@ class DbApi:
 
 
 class MongoDbApi(DbApi):
+    __instance = None
     _client: AsyncIOMotorClient
     _collections: dict
 
-    def __init__(self, connection_string, is_test: bool = False):
-        self.connect_to_db(connection_string, is_test)
+    def connect_to_db(self, connection_string: str, is_test: bool = False) -> bool:
+        try:
+            # Connect client
+            self._client = AsyncIOMotorClient(connection_string)
 
-    def connect_to_db(self, connection_string: str, is_test: bool = False) -> None:
-        # Connect client
-        self._client = AsyncIOMotorClient(connection_string)
+            # Connect db
+            self._db = self._client.Test if is_test else self._client.Prod
 
-        # Connect db
-        self._db = self._client.Test if is_test else self._client.Prod
-
-        # Connect collections
-        self._collections = {
-            "users": self._db.Users,
-            "themes": self._db.Themes,
-            "notions": self._db.Notions,
-            "notes": self._db.Notes
-        }
+            # Connect collections
+            self._collections = {
+                "users": self._db.Users,
+                "themes": self._db.Themes,
+                "notions": self._db.Notions,
+                "notes": self._db.Notes
+            }
+        except Exception as err:
+            logger.error(f"db connection error: str(err)")
+            return False
+        return True
 
     # ----- Users ----- #
     async def get_user(self, user_id: int) -> UserModel:

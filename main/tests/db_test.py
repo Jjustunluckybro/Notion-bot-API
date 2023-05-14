@@ -6,12 +6,12 @@ from pymongo.errors import DuplicateKeyError
 
 from main.models.notion_models import ThemeModel, NotionModel, NoteModel, CheckPointModel
 from main.utils.config import MONGO_TEST_DB_CONNECTION_PATH
-from main.utils.DbApi.MongoAPI import MongoDbApi, UserModel
+from main.data_base.MongoAPI import MongoDbApi, UserModel
 from main.utils.exceptons import DBNotFound
 
 
 class TestDB:
-    db = MongoDbApi(connection_string=MONGO_TEST_DB_CONNECTION_PATH, is_test=True)
+    db = MongoDbApi()
     test_user_const = UserModel(
         _id=1,
         tg_id="test_1",
@@ -87,6 +87,10 @@ class TestDB:
         attachments=[]
     )
     non_exist_id = 11111111
+
+    def test_create_db_connection(self):
+        db_connect_answer = self.db.connect_to_db(connection_string=MONGO_TEST_DB_CONNECTION_PATH, is_test=True)
+        assert db_connect_answer is True
 
     # ----- Users ----- #
     async def test_get_user(self):
