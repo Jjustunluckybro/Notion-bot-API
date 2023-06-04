@@ -1,33 +1,65 @@
+from typing import Optional
+from bson import ObjectId
+from bson.errors import InvalidId
 from pydantic import BaseModel, Field
 from datetime import datetime
 
 
+class PydanticObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v: str):
+        try:
+            return cls(v)
+        except InvalidId:
+            raise ValueError("Not a valid ObjectId")
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+
 class UserModel(BaseModel):
-    id: int = Field(alias="_id")
+    id: Optional[PydanticObjectId] = Field(alias="_id")
     tg_id: str
     name: str
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            PydanticObjectId: lambda v: str(v),
+        }
 
 
 class NotionModel(BaseModel):
     """Single notion data model"""
-    id: int = Field(alias="_id")
-    user_id: int
-    parent_id: int
+    id: Optional[ObjectId] = Field(alias="_id")
+    user_id: Optional[ObjectId]
+    parent_id: Optional[ObjectId]
     creation_time: datetime
     next_notion_time: datetime | None
     is_repeatable: bool
     description: str | None
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 class ThemeModel(BaseModel):
     """Single theme or subTheme data model"""
-    id: int = Field(alias="_id")
+    id: Optional[ObjectId] = Field(alias="_id")
     is_sub_theme: bool
-    parent_id: int | None
-    user_id: int
+    parent_id: Optional[ObjectId]
+    user_id: Optional[ObjectId]
     name: str
     description: str | None
     content: list[dict]
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class CheckPointModel(BaseModel):
@@ -36,16 +68,22 @@ class CheckPointModel(BaseModel):
     is_finish: bool
     attachments: list[str] | None
     creation_time: datetime
-    notion_id: int | None
+    notion_id: Optional[ObjectId]
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class NoteModel(BaseModel):
     """Single note date model"""
-    id: int = Field(alias="_id")
-    user_id: int
+    id: Optional[ObjectId] = Field(alias="_id")
+    user_id: Optional[ObjectId]
     name: str
     creation_time: datetime
-    notion_id: int
+    notion_id: Optional[ObjectId]
     description: str | None
     attachments: list[str]
     check_points: list[CheckPointModel]
+
+    class Config:
+        arbitrary_types_allowed = True
