@@ -3,7 +3,7 @@ from pymongo.errors import DuplicateKeyError
 from starlette.requests import Request
 
 from main.models.notion_models import UserModel
-from main.data_base.MongoAPI import MongoDbApi
+from main.data_base.MongoAPI import MongoDbApi, DbApi
 from main.utils.exceptons import DBNotFound
 from main.utils.utils import create_bson_object_by_id
 
@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.get("/get_user_by_id")
 async def get_user_by_id(request: Request, _id: str | bytes) -> UserModel:
-    db: MongoDbApi = request.app.state.mongo_db
+    db: DbApi = request.app.state.mongo_db
     _id = create_bson_object_by_id(_id)
     try:
         user = await db.get_user_by_id(_id)
@@ -26,7 +26,7 @@ async def get_user_by_id(request: Request, _id: str | bytes) -> UserModel:
 
 @router.get("/get_user_by_tg_id")
 async def get_user_by_tg_id(request: Request, tg_id: str) -> UserModel:
-    db: MongoDbApi = request.app.state.mongo_db
+    db: DbApi = request.app.state.mongo_db
     try:
         user = await db.get_user_by_tg_id(tg_id)
         return user
@@ -36,7 +36,7 @@ async def get_user_by_tg_id(request: Request, tg_id: str) -> UserModel:
 
 @router.post("/set_new_user")
 async def set_new_user(request: Request, user: UserModel) -> str:
-    db: MongoDbApi = request.app.state.mongo_db
+    db: DbApi = request.app.state.mongo_db
     try:
         insert_object = await db.write_new_user(user)
         return str(insert_object)
@@ -46,7 +46,7 @@ async def set_new_user(request: Request, user: UserModel) -> str:
 
 @router.delete("/delete_user_by_user_id")
 async def delete_user_by_user_id(request: Request, _id: str | bytes) -> str:
-    db: MongoDbApi = request.app.state.mongo_db
+    db: DbApi = request.app.state.mongo_db
     _id = create_bson_object_by_id(_id)
     try:
         deleted_obj = await db.delete_user(_id)

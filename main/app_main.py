@@ -8,12 +8,14 @@ from data_base.MongoAPI import MongoDbApi
 from utils import config as cfg
 from utils import logger as log
 
-from main.routers.user import router as user_router
-from main.routers.notes import router as note_router
+from main.routers.user import router as users_router
+from main.routers.notes import router as notes_router
+from main.routers.themes import router as themes_router
 
 ROUTERS = (
-    user_router,
-    note_router
+    users_router,
+    notes_router,
+    themes_router
 )
 
 

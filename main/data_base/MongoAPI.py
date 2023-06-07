@@ -14,7 +14,7 @@ class DbApi:
     async def get_user_by_id(self, user_id: ObjectId) -> UserModel:
         raise NotImplementedError
 
-    async def get_user_by_tg_id(self, user_id: ObjectId) -> UserModel:
+    async def get_user_by_tg_id(self, user_id: str) -> UserModel:
         raise NotImplementedError
 
     async def get_theme(self, theme_id: ObjectId) -> ThemeModel:
@@ -59,7 +59,7 @@ class DbApi:
     async def get_all_themes_by_condition(self, condition: dict) -> list[ThemeModel]:
         raise NotImplementedError
     
-    async def get_all_notes_by_condition(self, condition: dict) -> list[NoteModel]:
+    async def get_all_notes_by_condition(self, condition: dict, list_length: int = 100) -> list[NoteModel]:
         raise NotImplementedError
     
     async def get_all_notion_by_condition(self, condition: dict) -> list[NotionModel]:

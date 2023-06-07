@@ -50,16 +50,19 @@ class NotionModel(BaseModel):
 
 class ThemeModel(BaseModel):
     """Single theme or subTheme data model"""
-    id: Optional[ObjectId] = Field(alias="_id")
+    id: Optional[PydanticObjectId] = Field(alias="_id")
     is_sub_theme: bool
-    parent_id: Optional[ObjectId]
-    user_id: Optional[ObjectId]
+    parent_id: Optional[PydanticObjectId]
+    user_id: Optional[PydanticObjectId]
     name: str
     description: str | None
     content: list[dict]
 
     class Config:
         arbitrary_types_allowed = True
+        json_encoders = {
+            PydanticObjectId: lambda v: str(v),
+        }
 
 
 class CheckPointModel(BaseModel):
