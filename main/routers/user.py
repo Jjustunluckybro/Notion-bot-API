@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pymongo.errors import DuplicateKeyError
 from starlette.requests import Request
 
-from main.models.notion_models import UserModel, NoteModel, NotionModel, ThemeModel, PydanticObjectId
+from main.models.notion_models import UserModel
 from main.data_base.MongoAPI import MongoDbApi
 from main.utils.exceptons import DBNotFound
 from main.utils.utils import create_bson_object_by_id
@@ -42,3 +42,15 @@ async def set_new_user(request: Request, user: UserModel) -> str:
         return str(insert_object)
     except DuplicateKeyError:
         raise HTTPException(status_code=409, detail="User already exist")
+
+
+@router.delete("/delete_user_by_user_id")
+async def delete_user_by_user_id(request: Request, _id: str | bytes) -> str:
+    db: MongoDbApi = request.app.state.mongo_db
+    _id = create_bson_object_by_id(_id)
+    try:
+        deleted_obj = await db.delete_user(_id)
+        return str(deleted_obj)
+    except DBNotFound:
+        raise HTTPException(status_code=404, detail="User not found")
+

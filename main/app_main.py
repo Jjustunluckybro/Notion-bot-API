@@ -9,13 +9,21 @@ from utils import config as cfg
 from utils import logger as log
 
 from main.routers.user import router as user_router
+from main.routers.notes import router as note_router
+
+ROUTERS = (
+    user_router,
+    note_router
+)
 
 
 def main():
-    app = FastAPI(
-        title="notion_bot_api"
-    )
-    app.include_router(user_router)
+    # Create app
+    app = FastAPI(title="notion_bot_api")
+
+    # Add routers
+    for router in ROUTERS:
+        app.include_router(router)
 
     # Create db connection
     db = MongoDbApi()

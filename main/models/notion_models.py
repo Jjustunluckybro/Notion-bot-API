@@ -68,22 +68,28 @@ class CheckPointModel(BaseModel):
     is_finish: bool
     attachments: list[str] | None
     creation_time: datetime
-    notion_id: Optional[ObjectId]
+    notion_id: Optional[PydanticObjectId]
 
     class Config:
         arbitrary_types_allowed = True
+        json_encoders = {
+            PydanticObjectId: lambda v: str(v)
+        }
 
 
 class NoteModel(BaseModel):
     """Single note date model"""
-    id: Optional[ObjectId] = Field(alias="_id")
-    user_id: Optional[ObjectId]
+    id: Optional[PydanticObjectId] = Field(alias="_id")
+    user_id: Optional[PydanticObjectId]
     name: str
     creation_time: datetime
-    notion_id: Optional[ObjectId]
+    notion_id: Optional[PydanticObjectId]
     description: str | None
     attachments: list[str]
     check_points: list[CheckPointModel]
 
     class Config:
         arbitrary_types_allowed = True
+        json_encoders = {
+            PydanticObjectId: lambda v: str(v)
+        }
