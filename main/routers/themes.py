@@ -25,7 +25,7 @@ async def get_theme_by_id(request: Request, theme_id: str | bytes) -> ThemeModel
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Theme not found")
 
 
-@router.post("/set_new_theme", status_code=status.HTTP_200_OK)
+@router.post("/set_new_theme", status_code=status.HTTP_201_CREATED)
 async def set_new_theme(request: Request, theme: ThemeModel) -> str:
     db: DbApi = request.app.state.mongo_db
     try:

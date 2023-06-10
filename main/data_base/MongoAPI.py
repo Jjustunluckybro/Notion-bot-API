@@ -56,13 +56,13 @@ class DbApi:
     async def delete_note(self, note_id: ObjectId) -> ObjectId:
         raise NotImplementedError
 
-    async def get_all_themes_by_condition(self, condition: dict) -> list[ThemeModel]:
+    async def get_all_themes_by_condition(self, condition: dict, list_length: int = 100) -> list[ThemeModel]:
         raise NotImplementedError
     
     async def get_all_notes_by_condition(self, condition: dict, list_length: int = 100) -> list[NoteModel]:
         raise NotImplementedError
     
-    async def get_all_notion_by_condition(self, condition: dict) -> list[NotionModel]:
+    async def get_all_notion_by_condition(self, condition: dict, list_length: int = 100) -> list[NotionModel]:
         raise NotImplementedError
 
 

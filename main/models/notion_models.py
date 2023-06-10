@@ -36,9 +36,9 @@ class UserModel(BaseModel):
 
 class NotionModel(BaseModel):
     """Single notion data model"""
-    id: Optional[ObjectId] = Field(alias="_id")
-    user_id: Optional[ObjectId]
-    parent_id: Optional[ObjectId]
+    id: Optional[PydanticObjectId] = Field(alias="_id")
+    user_id: Optional[PydanticObjectId]
+    parent_id: Optional[PydanticObjectId]
     creation_time: datetime
     next_notion_time: datetime | None
     is_repeatable: bool
@@ -46,6 +46,9 @@ class NotionModel(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+        json_encoders = {
+            PydanticObjectId: lambda v: str(v),
+        }
 
 
 class ThemeModel(BaseModel):

@@ -11,11 +11,13 @@ from utils import logger as log
 from main.routers.user import router as users_router
 from main.routers.notes import router as notes_router
 from main.routers.themes import router as themes_router
+from main.routers.notions import router as notions_router
 
 ROUTERS = (
     users_router,
     notes_router,
-    themes_router
+    themes_router,
+    notions_router
 )
 
 
