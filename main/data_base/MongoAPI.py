@@ -56,6 +56,15 @@ class DbApi:
     async def delete_note(self, note_id: ObjectId) -> ObjectId:
         raise NotImplementedError
 
+    async def delete_all_themes_by_condition(self, condition: dict) -> int:
+        raise NotImplementedError
+
+    async def delete_all_notes_by_condition(self, condition: dict) -> int:
+        raise NotImplementedError
+
+    async def delete_all_notion_by_condition(self, condition: dict) -> int:
+        raise NotImplementedError
+
     async def get_all_themes_by_condition(self, condition: dict, list_length: int = 100) -> list[ThemeModel]:
         raise NotImplementedError
     
@@ -171,6 +180,7 @@ class MongoDbApi(DbApi):
             raise DBNotFound
         else:
             return theme_id
+
 
     # ----- Notions ----- #
     async def get_notion(self, notion_id: ObjectId) -> NotionModel:
