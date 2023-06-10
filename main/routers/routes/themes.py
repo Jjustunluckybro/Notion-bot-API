@@ -138,6 +138,10 @@ async def delete_child_sub_themes(request: Request, parent_theme_id: str | bytes
     except DBNotFound as err:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(err))
 
+@router.delete("/del_by_cond")
+async def del_by_cond(request: Request, condition: dict):
+    db: DbApi = request.app.state.mongo_db
+    await db.delete_all_themes_by_condition(condition)
 
 
 # @router.post("/get_all_themes_by_condition", status_code=status.HTTP_200_OK)
