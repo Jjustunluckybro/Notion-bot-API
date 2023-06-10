@@ -4,7 +4,7 @@ import pytest
 
 from pymongo.errors import DuplicateKeyError
 
-from main.models.notion_models import ThemeModel, NotionModel, NoteModel, CheckPointModel
+from main.models.notion_models import ThemeModel, NotionModel, NoteModel, CheckPointModel, PydanticObjectId
 from main.utils.config import MONGO_TEST_DB_CONNECTION_PATH
 from main.data_base.MongoAPI import MongoDbApi, UserModel
 from main.utils.exceptons import DBNotFound
@@ -14,57 +14,57 @@ from bson import ObjectId
 class TestDB:
     db = MongoDbApi()
     test_user_const = UserModel(
-        _id=ObjectId("6460f2db26fe8e1b7a473921"),
+        _id=PydanticObjectId("6460f2db26fe8e1b7a473921"),
         tg_id="123",
         name="321"
     )
     test_user_flex = UserModel(
-        _id=ObjectId("6460f2db26fe8e1b7a473922"),
+        _id=PydanticObjectId("6460f2db26fe8e1b7a473922"),
         tg_id="test_1",
         name="Test Name"
     )
     test_theme_cons = ThemeModel(
-        _id=ObjectId("6460f9eb095beba251481941"),
+        _id=PydanticObjectId("6460f9eb095beba251481941"),
         is_sub_theme=True,
-        parent_id=ObjectId("6460f2db26fe8e1b7a473921"),
-        user_id=ObjectId("6460f2db26fe8e1b7a473921"),
+        parent_id=PydanticObjectId("6460f2db26fe8e1b7a473921"),
+        user_id=PydanticObjectId("6460f2db26fe8e1b7a473921"),
         name="Test Theme Name",
         description="Some test description",
         content=[]
     )
     test_theme_flex = ThemeModel(
-        _id=ObjectId("6460f9eb095beba251481942"),
+        _id=PydanticObjectId("6460f9eb095beba251481942"),
         is_sub_theme=True,
-        parent_id=ObjectId("6460f2db26fe8e1b7a473922"),
-        user_id=ObjectId("6460f2db26fe8e1b7a473922"),
+        parent_id=PydanticObjectId("6460f2db26fe8e1b7a473922"),
+        user_id=PydanticObjectId("6460f2db26fe8e1b7a473922"),
         name="Test Theme Name",
         description="Some test description",
         content=[]
     )
     test_notion_cons = NotionModel(
-        _id=ObjectId("647c66c43decd3a12fb3647e"),
-        user_id=ObjectId("647c66c43decd3a12fb3647f"),
-        parent_id=ObjectId("647c66c43decd3a12fb36480"),
+        _id=PydanticObjectId("647c66c43decd3a12fb3647e"),
+        user_id=PydanticObjectId("647c66c43decd3a12fb3647f"),
+        parent_id=PydanticObjectId("647c66c43decd3a12fb36480"),
         creation_time=datetime.datetime(1999, 12, 31, 21, 0),
         next_notion_time=datetime.datetime(1999, 12, 31, 21, 0),
         is_repeatable=True,
         description="Some alarm desc"
     )
     test_notion_flex = NotionModel(
-        _id=ObjectId("647c709f79cf313ad8b6c9df"),
-        user_id=ObjectId("647c709f79cf313ad8b6c9e0"),
-        parent_id=ObjectId("647c709f79cf313ad8b6c9e1"),
+        _id=PydanticObjectId("647c709f79cf313ad8b6c9df"),
+        user_id=PydanticObjectId("647c709f79cf313ad8b6c9e0"),
+        parent_id=PydanticObjectId("647c709f79cf313ad8b6c9e1"),
         creation_time=datetime.datetime(1999, 12, 31, 21, 0),
         next_notion_time=None,
         is_repeatable=False,
         description="Some alarm desc"
     )
     test_note_cons = NoteModel(
-        _id=ObjectId("647c715ebf0b17d2091d06e1"),
-        user_id=ObjectId("647c715ebf0b17d2091d06e2"),
+        _id=PydanticObjectId("647c715ebf0b17d2091d06e1"),
+        user_id=PydanticObjectId("647c715ebf0b17d2091d06e2"),
         name="test notion name",
         creation_time=datetime.datetime(1999, 12, 31, 21, 0),
-        notion_id=ObjectId("647c715ebf0b17d2091d06e3"),
+        notion_id=PydanticObjectId("647c715ebf0b17d2091d06e3"),
         description="Note description",
         check_points=[
             CheckPointModel(
@@ -72,22 +72,22 @@ class TestDB:
                 is_finish=False,
                 attachments=[],
                 creation_time=datetime.datetime(1999, 12, 31, 21, 0),
-                notion_id=ObjectId("647c715ebf0b17d2091d06e4")
+                notion_id=PydanticObjectId("647c715ebf0b17d2091d06e4")
             )
         ],
         attachments=[]
     )
     test_note_flex = NoteModel(
-        _id=ObjectId("647c71ce757c21cca9550368"),
-        user_id=ObjectId("647c71ce757c21cca9550369"),
+        _id=PydanticObjectId("647c71ce757c21cca9550368"),
+        user_id=PydanticObjectId("647c71ce757c21cca9550369"),
         name="test notion name",
         creation_time=datetime.datetime(1999, 12, 31, 21, 0),
-        notion_id=ObjectId("647c71ce757c21cca955036a"),
+        notion_id=PydanticObjectId("647c71ce757c21cca955036a"),
         description="Note description",
         check_points=[],
         attachments=[]
     )
-    non_exist_id = ObjectId("1000a0aa00fa0a0b0a000001")
+    non_exist_id = PydanticObjectId("1000a0aa00fa0a0b0a000001")
 
     def test_create_db_connection(self):
         db_connect_answer = self.db.connect_to_db(connection_string=MONGO_TEST_DB_CONNECTION_PATH, is_test=True)
@@ -165,6 +165,22 @@ class TestDB:
         with pytest.raises(DBNotFound):
             await self.db.delete_theme(self.non_exist_id)
 
+    async def test_delete_all_themes_by_condition(self):
+        test_theme_1 = self.test_theme_cons
+        test_theme_2 = self.test_theme_flex
+
+        test_theme_1.id = PydanticObjectId("6540f9eb095beba251481989")
+        test_theme_2.id = PydanticObjectId("6230f9eb095beba251481999")
+        #
+        test_theme_1.description = "6460f9eb095beba"
+        test_theme_2.description = "6460f9eb095beba"
+
+        await self.db.write_new_theme(test_theme_1)
+        await self.db.write_new_theme(test_theme_2)
+
+        themes_deleted = await self.db.delete_all_themes_by_condition({"description": "6460f9eb095beba"})
+        assert themes_deleted == 2
+
     # ----- Notions ----- #
     async def test_get_notion(self):
         """Positive test | get notion from db"""
@@ -206,6 +222,22 @@ class TestDB:
         with pytest.raises(DBNotFound):
             await self.db.delete_notion(self.non_exist_id)
 
+    async def test_delete_all_notion_by_condition(self):
+        test_notion_1 = self.test_notion_cons
+        test_notion_2 = self.test_notion_flex
+
+        test_notion_1.id = PydanticObjectId("6540f9eb095beba251481989")
+        test_notion_2.id = PydanticObjectId("6230f9eb095beba251481999")
+        #
+        test_notion_1.description = "6460f9eb095beba"
+        test_notion_2.description = "6460f9eb095beba"
+
+        await self.db.write_new_notion(test_notion_1)
+        await self.db.write_new_notion(test_notion_2)
+
+        themes_deleted = await self.db.delete_all_notion_by_condition({"description": "6460f9eb095beba"})
+        assert themes_deleted == 2
+
     # ----- Notes ----- #
     async def test_get_note(self):
         note = await self.db.get_note(self.test_note_cons.id)
@@ -244,3 +276,20 @@ class TestDB:
         """Negative test | try to delete non-exist note"""
         with pytest.raises(DBNotFound):
             await self.db.delete_note(self.non_exist_id)
+
+    async def test_delete_all_note_by_condition(self):
+        test_note_1 = self.test_note_cons
+        test_note_2 = self.test_note_flex
+
+        test_note_1.id = PydanticObjectId("6540f9eb095beba251481989")
+        test_note_2.id = PydanticObjectId("6230f9eb095beba251481999")
+        #
+        test_note_1.description = "6460f9eb095beba"
+        test_note_2.description = "6460f9eb095beba"
+
+        await self.db.write_new_note(test_note_1)
+        await self.db.write_new_note(test_note_2)
+
+        themes_deleted = await self.db.delete_all_notes_by_condition({"description": "6460f9eb095beba"})
+        assert themes_deleted == 2
+

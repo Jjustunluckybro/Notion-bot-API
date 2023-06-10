@@ -67,10 +67,10 @@ class DbApi:
 
     async def get_all_themes_by_condition(self, condition: dict, list_length: int = 100) -> list[ThemeModel]:
         raise NotImplementedError
-    
+
     async def get_all_notes_by_condition(self, condition: dict, list_length: int = 100) -> list[NoteModel]:
         raise NotImplementedError
-    
+
     async def get_all_notion_by_condition(self, condition: dict, list_length: int = 100) -> list[NotionModel]:
         raise NotImplementedError
 
@@ -181,6 +181,13 @@ class MongoDbApi(DbApi):
         else:
             return theme_id
 
+    async def delete_all_themes_by_condition(self, condition: dict) -> int:
+        """"""
+        themes = await self._collections["themes"].delete_many(condition)
+        if themes.deleted_count == 0:
+            logger.error(f"No themes found settings condition: {condition}")
+            raise DBNotFound(f"No themes found settings condition: {condition}")
+        return themes.deleted_count
 
     # ----- Notions ----- #
     async def get_notion(self, notion_id: ObjectId) -> NotionModel:
@@ -207,7 +214,7 @@ class MongoDbApi(DbApi):
             logger.error(f"No notions found setting conditions: {condition}")
             raise DBNotFound(f"No notions found setting conditions: {condition}")
         return result
-    
+
     async def delete_notion(self, notion_id: ObjectId) -> ObjectId:
         """Delete notion from Notions collection by id
         raise DBNotFound exception if not notion with this id in collection"""
@@ -219,6 +226,13 @@ class MongoDbApi(DbApi):
         else:
             return notion_id
 
+    async def delete_all_notion_by_condition(self, condition: dict) -> int:
+        """"""
+        notions = await self._collections["notions"].delete_many(condition)
+        if notions.deleted_count == 0:
+            logger.error(f"No notions found settings condition: {condition}")
+            raise DBNotFound(f"No notions found settings condition: {condition}")
+        return notions.deleted_count
     # ----- Notes ----- #
     async def write_new_note(self, note: NoteModel) -> ObjectId:
         """Write new note obj by NoteModel in Note collection"""
@@ -255,3 +269,10 @@ class MongoDbApi(DbApi):
             raise DBNotFound(f"Not found note with id: {note_id}")
         else:
             return note_id
+
+    async def delete_all_notes_by_condition(self, condition: dict) -> int:
+        notes = await self._collections["notes"].delete_many(condition)
+        if notes.deleted_count == 0:
+            logger.error(f"No notes found settings condition: {condition}")
+            raise DBNotFound(f"No notes found settings condition: {condition}")
+        return notes.deleted_count
