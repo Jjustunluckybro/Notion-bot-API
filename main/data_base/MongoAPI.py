@@ -151,10 +151,10 @@ class MongoDbApi(DbApi):
         logger.info(f"Success write theme with id: {str(inserted_obj.inserted_id)} to db")
         return inserted_obj.inserted_id
 
-    async def get_all_themes_by_condition(self, condition: dict) -> list[ThemeModel]:
+    async def get_all_themes_by_condition(self, condition: dict, list_length: int = 100) -> list[ThemeModel]:
         themes = self._collections["themes"].find(condition)
         result = list()
-        for theme in await themes.to_list(length=100):
+        for theme in await themes.to_list(length=list_length):
             result.append(ThemeModel.parse_obj(theme))
         if not len(result):
             logger.error(f"No themes found settings condition: {condition}")

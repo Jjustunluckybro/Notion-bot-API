@@ -1,23 +1,18 @@
 from fastapi import FastAPI
 import uvicorn
-from pydantic import BaseConfig
-from starlette.requests import Request
 
 from utils.config import MONGO_TEST_DB_CONNECTION_PATH
 from data_base.MongoAPI import MongoDbApi
 from utils import config as cfg
 from utils import logger as log
 
-from main.routers.user import router as users_router
-from main.routers.notes import router as notes_router
-from main.routers.themes import router as themes_router
-from main.routers.notions import router as notions_router
+from main.routers.routes.themes import router as themes_router
 
 ROUTERS = (
-    users_router,
-    notes_router,
+    # users_router,
+    # notes_router,
     themes_router,
-    notions_router
+    # notions_router
 )
 
 

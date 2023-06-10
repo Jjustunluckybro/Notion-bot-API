@@ -56,7 +56,7 @@ class ThemeModel(BaseModel):
     id: Optional[PydanticObjectId] = Field(alias="_id")
     is_sub_theme: bool
     parent_id: Optional[PydanticObjectId]
-    user_id: Optional[PydanticObjectId]
+    user_id: PydanticObjectId
     name: str
     description: str | None
     content: list[dict]
