@@ -91,8 +91,8 @@ class TestDB:
             await self.db.delete_theme(test_data.non_exist_id)
 
     async def test_delete_all_themes_by_condition(self):
-        test_theme_1 = test_data.test_theme_cons
-        test_theme_2 = test_data.test_theme_flex
+        test_theme_1 = test_data.test_theme_cons.copy()
+        test_theme_2 = test_data.test_theme_flex.copy()
 
         test_theme_1.id = PydanticObjectId("6540f9eb095beba251481989")
         test_theme_2.id = PydanticObjectId("6230f9eb095beba251481999")
@@ -148,8 +148,8 @@ class TestDB:
             await self.db.delete_notion(test_data.non_exist_id)
 
     async def test_delete_all_notion_by_condition(self):
-        test_notion_1 = test_data.test_notion_cons
-        test_notion_2 = test_data.test_notion_flex
+        test_notion_1 = test_data.test_notion_cons.copy()
+        test_notion_2 = test_data.test_notion_flex.copy()
 
         test_notion_1.id = PydanticObjectId("6540f9eb095beba251481989")
         test_notion_2.id = PydanticObjectId("6230f9eb095beba251481999")
@@ -203,8 +203,8 @@ class TestDB:
             await self.db.delete_note(test_data.non_exist_id)
 
     async def test_delete_all_note_by_condition(self):
-        test_note_1 = test_data.test_note_cons
-        test_note_2 = test_data.test_note_flex
+        test_note_1 = test_data.test_note_cons.copy()
+        test_note_2 = test_data.test_note_flex.copy()
 
         test_note_1.id = PydanticObjectId("6540f9eb095beba251481989")
         test_note_2.id = PydanticObjectId("6230f9eb095beba251481999")
@@ -217,4 +217,3 @@ class TestDB:
 
         themes_deleted = await self.db.delete_all_notes_by_condition({"description": "6460f9eb095beba"})
         assert themes_deleted == 2
-
