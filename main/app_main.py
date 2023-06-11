@@ -6,12 +6,16 @@ from data_base.MongoAPI import MongoDbApi
 from utils import config as cfg
 from utils import logger as log
 
+from main.routers.routes.user import router as user_router
 from main.routers.routes.themes import router as themes_router
+from main.routers.routes.notes import router as notes_router
+from main.routers.routes.notions import router as notions_router
+
 
 ROUTERS = (
     # users_router,
-    # notes_router,
-    themes_router,
+    notes_router,
+    # themes_router,
     # notions_router
 )
 
@@ -29,7 +33,7 @@ def main():
     db.connect_to_db(connection_string=MONGO_TEST_DB_CONNECTION_PATH, is_test=True)
 
     # Save ref to db
-    app.state.mongo_db = db
+    app.state.db = db
 
     # Set logger
     app_logger_config = log.get_logger_config(cfg.LOGGER_CONFIG_PATH)
