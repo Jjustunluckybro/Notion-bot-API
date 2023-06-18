@@ -29,7 +29,7 @@ async def get_note_by_id(request: Request, note_id: str | bytes) -> NoteModel:
         raise HTTPException(status_code=404, detail="Note not found")
 
 
-@router.get("get_all_child_notes", status_code=status.HTTP_200_OK)
+@router.get("/get_all_child_notes", status_code=status.HTTP_200_OK)
 async def get_all_child_notes(request: Request,
                               parent_id: str | bytes,
                               list_length: int = 100) -> list[NoteModel]:
@@ -89,7 +89,7 @@ async def delete_note_by_id(request: Request, note_id: str | bytes) -> str:
         raise HTTPException(status_code=404, detail="Note not found")
 
 
-@router.delete("delete_all_child_notes", status_code=status.HTTP_200_OK)
+@router.delete("/delete_all_child_notes", status_code=status.HTTP_200_OK)
 async def delete_all_child_notes(request: Request, parent_id: str | bytes) -> int:
     """Delete all notes by parent_id"""
     db: DbApi = request.app.state.db

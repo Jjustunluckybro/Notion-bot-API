@@ -1,14 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from pymongo.errors import DuplicateKeyError
 from starlette import status
-from starlette.requests import Request
 
-from main.routers.utils.users import get_user_id_by_tg_id
 
 from main.models.notion_models import NoteModel, PydanticObjectId
 from main.data_base.MongoAPI import MongoDbApi, DbApi
 from main.utils.exceptons import DBNotFound
-from main.utils.utils import create_bson_object_by_id
 
 
 async def utils_get_all_child_notes(db: DbApi,

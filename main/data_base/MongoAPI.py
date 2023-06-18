@@ -233,6 +233,7 @@ class MongoDbApi(DbApi):
             logger.error(f"No notions found settings condition: {condition}")
             raise DBNotFound(f"No notions found settings condition: {condition}")
         return notions.deleted_count
+
     # ----- Notes ----- #
     async def write_new_note(self, note: NoteModel) -> ObjectId:
         """Write new note obj by NoteModel in Note collection"""

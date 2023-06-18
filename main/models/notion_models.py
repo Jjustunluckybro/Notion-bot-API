@@ -87,6 +87,7 @@ class NoteModel(BaseModel):
     """Single note date model"""
     id: Optional[PydanticObjectId] = Field(alias="_id")
     user_id: Optional[PydanticObjectId]
+    parent_id: PydanticObjectId
     name: str
     creation_time: datetime
     notion_id: Optional[PydanticObjectId]
