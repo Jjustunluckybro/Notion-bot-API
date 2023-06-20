@@ -39,6 +39,16 @@ class TestNotesRouters:
         assert response.json() == "647c71ce757c21cca9550368"
 
     @staticmethod
+    async def test_set_new_note_negative(client: AsyncClient):
+        body = {
+            "name": "test notion name",
+            "creation_time": "1999-12-31T21:00:00",
+            "description": ""
+        }
+        r = await client.post("notes/set_new_note", json=body)
+        assert r.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    @staticmethod
     async def test_get_all_child_notes_positive(client: AsyncClient):
         response = await client.get("/notes/get_all_child_notes?parent_id=6460f9eb095beba251481942&list_length=100")
         assert response.status_code == status.HTTP_200_OK
@@ -51,6 +61,22 @@ class TestNotesRouters:
         assert response.json() == {"detail": "Not found child notes"}
 
     @staticmethod
+    def test_get_all_note_by_condition(client: AsyncClient):
+        condition = {
+            "name": "test note name"
+        }
+        r = await client.post(f"/notes/get_all_notes_by_condition", json=condition)
+        assert r.status_code == status.HTTP_200_OK
+        assert len(r.json()) == 2
+
+    # @staticmethod
+    # def test_get_all_note_by_condition_2(client: AsyncClient):
+    #     condition = {
+    #
+    #     }
+    #
+
+    @staticmethod
     async def test_delete_note_positive(client: AsyncClient):
         response = await client.delete("/notes/delete_note_by_id?note_id=647c71ce757c21cca9550368")
         assert response.status_code == status.HTTP_200_OK
@@ -60,3 +86,11 @@ class TestNotesRouters:
     async def test_delete_note_negative(client: AsyncClient):
         response = await client.delete(f"notes/delete_note_by_id?note_id={test_data.non_exist_id}")
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    @staticmethod
+    async def test_delete_notes_by_parent(client: AsyncClient):
+        ...
+
+    @staticmethod
+    async def test_delete_notes_by_parent_2(client: AsyncClient):
+        ...
