@@ -31,5 +31,6 @@ async def utils_delete_all_child_notes(db: DbApi, parent_id: PydanticObjectId) -
                 "parent_id": parent_id
             }
         )
+        return deleted_count
     except DBNotFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found child notes")
